@@ -12,7 +12,7 @@ object Synthesizer extends App {
 
   type Octave = Int
 
-  case class Pitch(val sign: String)
+  case class Pitch(sign: String)
   object PA extends Pitch("a")
   object PB extends Pitch("b")
   object PC extends Pitch("c")
@@ -42,12 +42,10 @@ object Synthesizer extends App {
 
     val eOctChange: Event[Octave => Octave] = Event.joinMaybes(
       eKey
-        .map { k =>
-          k match {
-            case '+' => Some((x: Octave) => x + 1)
-            case '-' => Some((x: Octave) => x - 1)
-            case _   => None
-          }
+        .map {
+          case '+' => Some((x: Octave) => x + 1)
+          case '-' => Some((x: Octave) => x - 1)
+          case _ => None
         }
     )
 
