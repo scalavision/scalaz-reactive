@@ -147,19 +147,17 @@ object SynthesizerExtended extends App {
 
     val octSink: Behaviour[Octave] = octChange(eKey)
     val toneSink: Behaviour[Pitch] = toneChange(eKey)
-    //val appSink: Behaviour[AppAction] = appChange(eKey)
+    val appSink: Behaviour[AppAction] = appChange(eKey)
 
     //Sink.sinkB(beep(toneSink, octSink), (tn: TimeFun[(Pitch, Octave)]) => Time.now.map{t => println(s"Tone ${tn.apply(t)}")})
 
+    for {
+      _ <- Sink.sinkB(toneSink, (tn: TimeFun[Pitch]) => Time.now.map {t => println(s"Tone is now ${tn.apply(t)}")}).fork
+      _ <- Sink.sinkB(octSink, (tn: TimeFun[Octave]) => Time.now.map {t => println(s"Octave is ${tn.apply(t)}")}).fork
+      _ <- Sink.sinkB(appSink, (tn: TimeFun[AppAction]) => Time.now.map{t => println(s"App Status is now ${tn.apply(t)}")}).fork
+    } yield ()
 
-
-//    for {
-//      _ <- Sink.sinkB(toneSink, (tn: TimeFun[Pitch]) => Time.now.map {t => println(s"Tone is now ${tn.apply(t)}")})
-//      _ <- Sink.sinkB(octSink, (tn: TimeFun[Octave]) => Time.now.map {t => println(s"Octave is ${tn.apply(t)}")})
-//      _ <- Sink.sinkB(appSink, (tn: TimeFun[AppAction]) => Time.now.map{t => println(s"App Status is now ${tn.apply(t)}")})
-//    } yield ()
-
-
+    //Sink.sinkB(toneSink, (tn: TimeFun[Pitch]) => Time.now.map{t => println(s"Tone is now ${tn.apply(t)}")})
 
   }
 
